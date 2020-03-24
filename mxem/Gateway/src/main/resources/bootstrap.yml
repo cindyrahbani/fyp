@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: Gateway
+  cloud:
+    consul:
+      host: mxem_consul_1
+      port: 8500
+      config:
+        fail-fast: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: Environments
+          uri: lb://Environments
+          predicates:
+            - Path=/projects/**
+          filters:
+            - RewritePath=/projects/(?<path>.*), /projects/$\{path}
+        - id: Environments
+          uri: lb://Environments
+          predicates:
+            - Path=/environments/**
+          filters:
+            - RewritePath=/environments/(?<path>.*), /environments/$\{path}
+        - id: Authorization
+          uri: lb://Authorization
+          predicates:
+            - Path=/authorize/**
+          filters:
+            - RewritePath=/authorize/(?<path>.*), /authorize/$\{path}
+        - id: Authorization
+          uri: lb://Authorization
+          predicates:
+            - Path=/users/**
+          filters:
+            - RewritePath=/users/(?<path>.*), /users/$\{path}
+        - id: Authorization
+          uri: lb://Authorization
+          predicates:
+            - Path=/roles/**
+          filters:
+            - RewritePath=/roles/(?<path>.*), /roles/$\{path}
+        - id: Authorization
+          uri: lb://Authorization
+          predicates:
+            - Path=/permissions/**
+          filters:
+            - RewritePath=/permissions/(?<path>.*), /permissions/$\{path}
+
+logging.level.com.netflix: DEBUG
+
+management:
+  security:
+    enabled: false

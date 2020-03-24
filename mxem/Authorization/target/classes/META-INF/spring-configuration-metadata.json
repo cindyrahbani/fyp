@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "application.jwt",
+      "type": "murex.dev.mxem.Authorization.config.JwtConfig",
+      "sourceType": "murex.dev.mxem.Authorization.config.JwtConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "application.jwt.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "murex.dev.mxem.Authorization.config.JwtConfig"
+    },
+    {
+      "name": "application.jwt.token-expiration-after-days",
+      "type": "java.lang.Integer",
+      "sourceType": "murex.dev.mxem.Authorization.config.JwtConfig"
+    },
+    {
+      "name": "application.jwt.token-prefix",
+      "type": "java.lang.String",
+      "sourceType": "murex.dev.mxem.Authorization.config.JwtConfig"
+    }
+  ],
+  "hints": []
+}

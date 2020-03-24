@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Scheduler" />
+        <module name="Authorization" />
+        <module name="Gateway" />
+        <module name="Environments" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Authentication" target="11" />
+      <module name="environment-service" target="1.8" />
+      <module name="gateway-service" target="11" />
+      <module name="Users" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Authentication" options="-parameters" />
+      <module name="Authorization" options="-parameters" />
+      <module name="Environments" options="-parameters" />
+      <module name="Gateway" options="-parameters" />
+      <module name="Scheduler" options="-parameters" />
+      <module name="Users" options="-parameters" />
+      <module name="environment-service" options="-parameters" />
+      <module name="gateway-service" options="-parameters" />
+      <module name="mxem" options="" />
+    </option>
+  </component>
+</project>

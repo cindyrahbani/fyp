@@ -1,0 +1,135 @@
+version: '3'
+services:
+
+  # consul:
+  #   image: consul
+  #   ports:
+  #     - 8500:8500
+  #   expose:
+  #     - 8500
+  #   command: |
+  #     sh -c 'set -uex; \
+  #       consul agent -server -bootstrap-expect=1 -data-dir /consul/data -node=agent-one -enable-script-checks=true -ui -disable-host-node-id -client 0.0.0.0 & \
+  #       sleep 20 && \
+  #       consul kv put -http-addr=http://localhost:8500 config/init true &&\
+  #       consul kv put config/Gateway/security.user.name admin &&\
+  #       consul kv put config/Gateway/security.user.password admin &&\
+  #       consul kv put config/Authorization/application.jwt.secretKey securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure &&\
+  #       consul kv put config/Authorization/application.jwt.tokenExpirationAfterDays 10 &&\
+  #       consul kv put config/Authorization/security.user.name admin &&\
+  #       consul kv put config/Authorization/security.user.password admin &&\
+  #       consul kv put config/Authorization/mxpipeline.ldap.url ldap://root-dc.murex.com:3268 &&\
+  #       consul kv put config/Authorization/mxpipeline.ldap.domain murex.com &&\
+  #       consul kv put config/Authorization/spring.datasource.platform postgres &&\
+  #       consul kv put config/Authorization/spring.datasource.url jdbc:postgresql://mxem_postgres_1:5432/users &&\
+  #       consul kv put config/Authorization/spring.datasource.username postgres &&\
+  #       consul kv put config/Authorization/spring.datasource.password Staring123 &&\
+
+
+  #       consul kv put config/Environments/spring.data.mongodb.port 27017 &&\
+  #       consul kv put config/Environments/spring.data.mongodb.host localhost &&\
+  #       consul kv put config/Environments/spring.data.mongodb.database environments &&\
+  #       consul kv put config/Environments/application.jwt.secretKey securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure &&\
+  #       consul kv put config/Environments/application.jwt.tokenExpirationAfterDays 10 &&\
+  #       consul kv put config/Environments/security.user.name admin &&\
+  #       consul kv put config/Environments/security.user.password admin &&\
+  #       consul kv put config/Environments/spring.rabbitmq.host localhost &&\
+  #       consul kv put config/Environments/spring.rabbitmq.port 5672 &&\
+  #       consul kv put config/Environments/spring.rabbitmq.username guest &&\
+  #       consul kv put config/Environments/spring.rabbitmq.password guest &&\
+  #       consul kv put config/Environments/javainuse.rabbitmq.exchange javainuse.exchange &&\
+  #       consul kv put config/Environments/javainuse.rabbitmq.queue javainuse.queue &&\
+  #       consul kv put config/Environments/javainuse.rabbitmq.routingkey javainuse.routingkey &&\
+
+  #       consul kv put config/Scheduler/security.user.name admin &&\
+  #       consul kv put config/Scheduler/security.user.password admin &&\
+  #       consul kv put config/Scheduler/spring.rabbitmq.host localhost &&\
+  #       consul kv put config/Scheduler/spring.rabbitmq.port 5672 &&\
+  #       consul kv put config/Scheduler/spring.rabbitmq.username guest &&\
+  #       consul kv put config/Scheduler/spring.rabbitmq.password guest &&\
+  #       consul kv put config/Scheduler/javainuse.rabbitmq.exchange javainuse.exchange &&\
+  #       consul kv put config/Scheduler/javainuse.rabbitmq.queue javainuse.queue &&\
+  #       consul kv put config/Scheduler/javainuse.rabbitmq.routingkey javainuse.routingkey &&\
+  #       consul kv put config/Scheduler/spring.data.mongodb.port 27017 &&\
+  #       consul kv put config/Scheduler/spring.data.mongodb.host localhost &&\
+  #       consul kv put config/Scheduler/spring.data.mongodb.database scheduler &&\
+  #       consul kv put config/Scheduler/application.jwt.secretKey securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecure &&\
+  #       consul kv put config/Scheduler/application.jwt.tokenExpirationAfterDays 10 &&\
+  #       tail -f /dev/null'
+
+  
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+
+  postgres:
+    image: kiasaki/alpine-postgres:9.5
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    volumes:
+      - postgresvol:/db/data
+
+  # mongo:
+  #   image: 'mongo:4'
+  #   ports:
+  #     - "27017:27017"
+  #   expose:
+  #     - "27017"
+  #   environment:
+  #     COMPOSE_CONVERT_WINDOWS_PATHS: 1
+  #   volumes:
+  #     - mongovol:/data/db
+
+  gateway:
+    build:
+      context: ./Gateway 
+      dockerfile: Dockerfile
+    image: gateservice:1
+    ports:
+      - 8081:8081
+    expose:
+      - 8081
+    # depends_on:
+    #   - consul
+    # links:
+    #   - consul
+
+  authorization:
+    build:
+         context: ./Authorization
+         dockerfile: Dockerfile
+    image: authservice:1
+    depends_on:
+      - postgres
+      # - consul
+    # links:
+    #   - consul
+
+  # environments:
+  #   build:
+  #        context: ./Environments
+  #        dockerfile: Dockerfile
+  #   image: envservice:1
+  #   depends_on:
+  #     - consul
+  #     - mongo
+
+  # scheduler:
+  #   build:
+  #        context: ./Scheduler
+  #        dockerfile: Dockerfile
+  #   image: schedservice:1
+  #   depends_on:
+  #     - consul
+ 
+volumes:
+  mongovol:
+    external:
+      name: mongovolume
+  postgresvol:
+    external:
+      name: postgresvolume
+  consulvol:
+    external:
+      name: consulvolume
